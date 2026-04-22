@@ -44,31 +44,53 @@ function initNavigation() {
 function initCountdown() {
     const countdownElement = document.querySelector('.countdown');
     if (!countdownElement) return;
-    
+    // elementos do DOM do contador
+    const daysEl = document.getElementById('countdown-days');
+    const hoursEl = document.getElementById('countdown-hours');
+    const minutesEl = document.getElementById('countdown-minutes');
+    const secondsEl = document.getElementById('countdown-seconds');
+
     // Set the date we're counting down to (current date + 2 days)
     const countDownDate = new Date();
     countDownDate.setDate(countDownDate.getDate() + 2);
-    
+
+    // guarda valores anteriores para detectar mudança e animar
+    const prev = { days: null, hours: null, minutes: null, seconds: null };
+
     // Update the countdown every 1 second
     const countdownTimer = setInterval(function() {
         // Get current date and time
         const now = new Date().getTime();
-        
+
         // Find the distance between now and the countdown date
         const distance = countDownDate - now;
-        
+
         // Time calculations for days, hours, minutes and seconds
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        // Update countdown numbers
-        document.getElementById('countdown-days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
-        
+
+        // helper para atualizar e animar um elemento quando o valor muda
+        function updateEl(el, value, key) {
+            if (!el) return;
+            const text = value.toString().padStart(2, '0');
+            if (prev[key] !== value) {
+                el.textContent = text;
+                el.classList.remove('animate-pop');
+                // forçar reflow para reiniciar animação
+                void el.offsetWidth;
+                el.classList.add('animate-pop');
+                el.addEventListener('animationend', () => el.classList.remove('animate-pop'), { once: true });
+                prev[key] = value;
+            }
+        }
+
+        updateEl(daysEl, days, 'days');
+        updateEl(hoursEl, hours, 'hours');
+        updateEl(minutesEl, minutes, 'minutes');
+        updateEl(secondsEl, seconds, 'seconds');
+
         // If the countdown is finished, display a message
         if (distance < 0) {
             clearInterval(countdownTimer);
@@ -102,11 +124,15 @@ function initScrollReveal() {
         const windowHeight = window.innerHeight;
         const revealPoint = 150;
         
-        revealElements.forEach(element => {
+        revealElements.forEach((element, idx) => {
             const elementTop = element.getBoundingClientRect().top;
             
             if (elementTop < windowHeight - revealPoint) {
-                element.classList.add('active');
+                if (!element.classList.contains('active')) {
+                    // aplicação de delay cíclico para gerar efeito de stagger
+                    element.style.transitionDelay = `${(idx % 6) * 80}ms`;
+                    element.classList.add('active');
+                }
             }
         });
     }

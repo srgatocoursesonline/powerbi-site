@@ -1245,6 +1245,120 @@ textarea.form-control {
   animation-delay: 0.6s;
 }
 
+/* Animações adicionais (globais) */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+  50% { transform: scale(1.18); filter: drop-shadow(0 12px 30px rgba(0,0,0,0.25)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+}
+
+.animate-pop {
+  animation: pop 0.55s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes tilt {
+  0% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+.animate-tilt {
+  animation: tilt 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.hero-title {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-title::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  transform: skewX(-20deg);
+  animation: shimmer 3.2s linear infinite;
+}
+
+.nav-link {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-4px);
+}
+
+.feature-card {
+  will-change: transform, box-shadow;
+}
+
+.feature-card:hover {
+  transform: translateY(-14px) rotate(-0.5deg);
+  box-shadow: 0 25px 40px rgba(0,0,0,0.35);
+}
+
+.pricing-card {
+  will-change: transform, box-shadow;
+}
+
+.pricing-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.45);
+}
+
+.testimonial-card {
+  transition: transform 0.6s var(--transition), opacity 0.6s var(--transition);
+}
+
+.testimonial-card.active {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.btn {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.countdown-number {
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+}
+
+.countdown-number.animate-pop {
+  animation: pop 0.55s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Hook for JS-driven staggered reveal */
+.reveal.staggered {}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* Scroll Reveal */
 .reveal {
   position: relative;
